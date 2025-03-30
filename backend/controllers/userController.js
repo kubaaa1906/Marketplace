@@ -8,9 +8,11 @@ exports.registerUser = async(req, res) => {
     try{
         const {error} = validate(req.body);
         let user = await User.findOne({username: req.body.username});
-        if(user){
-            return res.status(400).json({ message: "User with this username already exist!"});
+
+        if(user) {
+            return res.status(400).json({message: "User with this username already exist!"});
         }
+
         let userEmail = await User.findOne({email: req.body.email});
         if(userEmail){
             return res.status(400).json({ message: "User with this email already exist!"});

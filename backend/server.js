@@ -3,8 +3,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const connection = require('./db')
-const port = process.env.PORT || 8080;
-const userRoutes = require("./routes/userRoutes")
+const port = process.env.PORT || 8083;
+
+const userRoutes = require("./routes/userRoutes");
 
 connection()
 
@@ -14,7 +15,7 @@ app.use(cors())
 app.use("/api/users", userRoutes)
 
 
-app.listen(port, () => console.log('Port $(port)'));
+app.listen(port, () => console.log('Port: ' + port));
 
 
 
