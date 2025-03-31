@@ -10,6 +10,8 @@ const Login = () => {
 
     const [error, setError] = useState("");
 
+    let navigate = useNavigate();
+
     const onChange = ({currentTarget: input}) => {
         setData({ ...data, [input.name]: input.value });
     }
@@ -17,12 +19,13 @@ const Login = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
         try{
-            const url = "http://localhost:8085/api/users";
+            const url = "http://localhost:8083/api/users/login";
             const {data: res} = await axios.post(url, data);
+            console.log(data)
             localStorage.setItem("token", res.data);
-            window.location = "/";
+            navigate("/");
         } catch (error){
-            if(error){
+            if(error.response && error.response.status >= 400 && error.response.status <= 500){
                 setError(error.response.data.message);
             }
         }
@@ -31,7 +34,7 @@ const Login = () => {
     return(
         <div>
             <h1> Zaloguj się </h1>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     placeholder="Nazwa użytkownika"

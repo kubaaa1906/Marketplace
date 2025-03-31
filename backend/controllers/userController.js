@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const passwordComplexity = require("joi-password-complexity");
 
 exports.registerUser = async(req, res) => {
@@ -22,6 +22,7 @@ exports.registerUser = async(req, res) => {
         const hashPassword = await bcrypt.hash(req.body.password, salt);
 
         const newUser = new User({ ...req.body, password: hashPassword});
+        console.log(newUser)
         await newUser.save();
 
     } catch (error){
@@ -49,13 +50,30 @@ exports.loginUser = async (req, res) => {
         if(!validPassword){
             return res.status(400).send({ message: "Invalid username or password!" });
         }
-
+        console.log(user);
         const token = user.generateAuthToken();
         res.status(200).send({data: token, message: "Login successfull"})
     } catch (error){
         return res.status(500).json({message: "Server Error"});
     }
 }
+
+exports.getUser = async (req, res) => {
+    try{
+        const user = await User.findById(req.user.id).select("-password");
+
+        console.log("User: ", user);
+
+        if(!user){
+            return res.status(400).json({ message: "User doesn`t exist"})
+        }
+
+        return res.status(200).json(user);
+    } catch(error){
+        return res.status(500).json({ message: "Server Error"})
+    }
+}
+
 
 const validateLogin = (data) => {
     const schemaData = Joi.object({

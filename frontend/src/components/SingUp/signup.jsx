@@ -19,12 +19,13 @@ const Signup = () => {
     const onChange = ({currentTarget: input}) => {
         setData({ ...data, [input.name]: input.value });
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            const url = "http://localhost:8085/api/users";
+            const url = "http://localhost:8083/api/users/register";
             const {data: res} = await axios.post(url, data);
-            navigate("/");
+            navigate("/login");
             console.log(res.message);
         } catch (error){
             if(error.response && error.response.status >= 400 && error.response.status <= 500){
